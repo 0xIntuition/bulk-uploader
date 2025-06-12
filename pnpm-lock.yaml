@@ -8,15 +8,24 @@ importers:
 
   .:
     dependencies:
+      '@surrealdb/node':
+        specifier: 1.0.0-beta.3
+        version: 1.0.0-beta.3(surrealdb@1.3.2(tslib@2.8.1)(typescript@5.8.3)(ws@8.18.2))
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
+      graphql-request:
+        specifier: ^7.2.0
+        version: 7.2.0(graphql@16.11.0)
+      surrealdb:
+        specifier: ^1.3.2
+        version: 1.3.2(tslib@2.8.1)(typescript@5.8.3)(ws@8.18.2)
       tsx:
         specifier: ^4.19.4
         version: 4.19.4
       viem:
         specifier: ^2.31.0
-        version: 2.31.0
+        version: 2.31.0(typescript@5.8.3)
     devDependencies:
       '@types/node':
         specifier: ^24.0.0
@@ -177,6 +186,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@graphql-typed-document-node/core@3.2.0':
+    resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+
   '@noble/ciphers@1.3.0':
     resolution: {integrity: sha512-2I0gnIVPtfnMw9ee9h1dJG7tp81+8Ob3OJb3Mv37rx5L40/b0i7djjCVvGOVqc9AEIQyvyu1i6ypKdFw8R8gQw==}
     engines: {node: ^14.21.3 || >=16}
@@ -197,6 +211,59 @@ packages:
 
   '@scure/bip39@1.6.0':
     resolution: {integrity: sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A==}
+
+  '@surrealdb/node-android-arm64@1.0.0-beta.3':
+    resolution: {integrity: sha512-ki1Ag20Jqphnwb+PJLeBEdidXSggsYrJ13QhzvtX9BmbKhlG297wM7v1QoNXPtP650KV6496NReBSmrnU/AmfQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@surrealdb/node-darwin-arm64@1.0.0-beta.3':
+    resolution: {integrity: sha512-MVTzJx0DZCo0NI/uSSjffRoBmz3iTENJ8qCFZ73IiqBs+HROff/vneOQ3J5VepfJEpV5qPcymmSlwn6JNou0YQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@surrealdb/node-darwin-universal@1.0.0-beta.3':
+    resolution: {integrity: sha512-Afxu1/Uzeah7wiHKv3+m9Bc4KM8q1sbBFxZ85VwqPAUh7a9j6EKO3JEitQ98N5mHTbokN+Z3ZoRXeEqI6Nc2NA==}
+    engines: {node: '>= 10'}
+    os: [darwin]
+
+  '@surrealdb/node-darwin-x64@1.0.0-beta.3':
+    resolution: {integrity: sha512-MqsPa8f1zllE4ANOTsuBKG/iQpXo3Mp2NJ+cA/TLlwK5wjFF7cYyMIMZvfIz3Fh+Ikz+iv8ckZ/T1cwbOJaBPQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@surrealdb/node-linux-arm64-gnu@1.0.0-beta.3':
+    resolution: {integrity: sha512-lhPg4dfzQVvqsCCV0RHsCUBFPCHD3rP0ZV3xt74A2yGtd93oeA2BFaVDiretqsOPmiMejS47hBmN/i7Y7agVMQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@surrealdb/node-linux-x64-gnu@1.0.0-beta.3':
+    resolution: {integrity: sha512-QLHnu/s6fTP9hWiHqVodrQLc45UD+kQFSYt23KvOdxIZjseqlK48J31O88DQEEMw9EnmDt9TEAbGjWiB2tLfbA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@surrealdb/node-linux-x64-musl@1.0.0-beta.3':
+    resolution: {integrity: sha512-k3k/JqXBFb9HZKANIiT4P/WnOkFP8gj/K5ESAiGgNNwWel6OsjlYzLz70rjtzjliHiAfqc4W4uHd2AMo0NHlmg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@surrealdb/node-win32-x64-msvc@1.0.0-beta.3':
+    resolution: {integrity: sha512-0KkXJvode1v8GnyoS1i6urEmNH2rXI/uXzLDfFhJYU0q36z4SapBTNyqIhaGPMQIvRK6yUqWyEAbhJKcTq6IBQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@surrealdb/node@1.0.0-beta.3':
+    resolution: {integrity: sha512-7szXXSzDNoSq/p//j4t3S0Ki1gxrlZGAVe5m6I3INR1IfOY0rlWRgX3CSt8E8oItWywlVzZmPaetf8vRlQm0OQ==}
+    engines: {node: '>= 10'}
+    peerDependencies:
+      surrealdb: ^1.0.6
 
   '@types/node@24.0.0':
     resolution: {integrity: sha512-yZQa2zm87aRVcqDyH5+4Hv9KYgSdgwX1rFnGvpbzMaC7YAljmhBET93TPiTd3ObwTL+gSpIzPKg5BqVxdCvxKg==}
@@ -232,6 +299,15 @@ packages:
   get-tsconfig@4.10.1:
     resolution: {integrity: sha512-auHyJ4AgMz7vgS8Hp3N6HXSmlMdUyhSUrfBF16w153rxtLIEOE+HGqaBppczZvnHLqQJfiHotCYpNhl0lUROFQ==}
 
+  graphql-request@7.2.0:
+    resolution: {integrity: sha512-0GR7eQHBFYz372u9lxS16cOtEekFlZYB2qOyq8wDvzRmdRSJ0mgUVX1tzNcIzk3G+4NY+mGtSz411wZdeDF/+A==}
+    peerDependencies:
+      graphql: 14 - 16
+
+  graphql@16.11.0:
+    resolution: {integrity: sha512-mS1lbMsxgQj6hge1XZ6p7GPhbrtFwUFYi3wRzXAC/FmYnyXMTvvI3td3rjmQ2u8ewXueaSvRPWaEcgVVOT9Jnw==}
+    engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
+
   isows@1.0.7:
     resolution: {integrity: sha512-I1fSfDCZL5P0v33sVqeTDSpcstAg/N+wF5HS033mogOVIp4B+oHC7oOCsA3axAbBSGTJ8QubbNmnIRN/h8U7hg==}
     peerDependencies:
@@ -248,13 +324,32 @@ packages:
   resolve-pkg-maps@1.0.0:
     resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==}
 
+  surrealdb@1.3.2:
+    resolution: {integrity: sha512-mL7nij33iuon3IQP72F46fgX3p2LAxFCWCBDbZB7IohZ13RTEwJVNq7nZeP1eMSceQUpKzS6OHIWOuF9LYAkNw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      tslib: ^2.6.3
+      typescript: ^5.0.0
+
+  tslib@2.8.1:
+    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
   tsx@4.19.4:
     resolution: {integrity: sha512-gK5GVzDkJK1SI1zwHf32Mqxf2tSJkNx+eYcNly5+nHvWqXUJYUkWBQtKauoESz3ymezAI++ZwT855x5p5eop+Q==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
+  typescript@5.8.3:
+    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
+
+  uuidv7@1.0.2:
+    resolution: {integrity: sha512-8JQkH4ooXnm1JCIhqTMbtmdnYEn6oKukBxHn1Ic9878jMkL7daTI7anTExfY18VRCX7tcdn5quzvCb6EWrR8PA==}
+    hasBin: true
 
   viem@2.31.0:
     resolution: {integrity: sha512-U7OMQ6yqK+bRbEIarf2vqxL7unSEQvNxvML/1zG7suAmKuJmipqdVTVJGKBCJiYsm/EremyO2FS4dHIPpGv+eA==}
@@ -355,6 +450,10 @@ snapshots:
   '@esbuild/win32-x64@0.25.5':
     optional: true
 
+  '@graphql-typed-document-node/core@3.2.0(graphql@16.11.0)':
+    dependencies:
+      graphql: 16.11.0
+
   '@noble/ciphers@1.3.0': {}
 
   '@noble/curves@1.9.1':
@@ -376,11 +475,50 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
+  '@surrealdb/node-android-arm64@1.0.0-beta.3':
+    optional: true
+
+  '@surrealdb/node-darwin-arm64@1.0.0-beta.3':
+    optional: true
+
+  '@surrealdb/node-darwin-universal@1.0.0-beta.3':
+    optional: true
+
+  '@surrealdb/node-darwin-x64@1.0.0-beta.3':
+    optional: true
+
+  '@surrealdb/node-linux-arm64-gnu@1.0.0-beta.3':
+    optional: true
+
+  '@surrealdb/node-linux-x64-gnu@1.0.0-beta.3':
+    optional: true
+
+  '@surrealdb/node-linux-x64-musl@1.0.0-beta.3':
+    optional: true
+
+  '@surrealdb/node-win32-x64-msvc@1.0.0-beta.3':
+    optional: true
+
+  '@surrealdb/node@1.0.0-beta.3(surrealdb@1.3.2(tslib@2.8.1)(typescript@5.8.3)(ws@8.18.2))':
+    dependencies:
+      surrealdb: 1.3.2(tslib@2.8.1)(typescript@5.8.3)(ws@8.18.2)
+    optionalDependencies:
+      '@surrealdb/node-android-arm64': 1.0.0-beta.3
+      '@surrealdb/node-darwin-arm64': 1.0.0-beta.3
+      '@surrealdb/node-darwin-universal': 1.0.0-beta.3
+      '@surrealdb/node-darwin-x64': 1.0.0-beta.3
+      '@surrealdb/node-linux-arm64-gnu': 1.0.0-beta.3
+      '@surrealdb/node-linux-x64-gnu': 1.0.0-beta.3
+      '@surrealdb/node-linux-x64-musl': 1.0.0-beta.3
+      '@surrealdb/node-win32-x64-msvc': 1.0.0-beta.3
+
   '@types/node@24.0.0':
     dependencies:
       undici-types: 7.8.0
 
-  abitype@1.0.8: {}
+  abitype@1.0.8(typescript@5.8.3):
+    optionalDependencies:
+      typescript: 5.8.3
 
   dotenv@16.5.0: {}
 
@@ -421,11 +559,18 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
+  graphql-request@7.2.0(graphql@16.11.0):
+    dependencies:
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.11.0)
+      graphql: 16.11.0
+
+  graphql@16.11.0: {}
+
   isows@1.0.7(ws@8.18.2):
     dependencies:
       ws: 8.18.2
 
-  ox@0.7.1:
+  ox@0.7.1(typescript@5.8.3):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/ciphers': 1.3.0
@@ -433,12 +578,25 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.0.8
+      abitype: 1.0.8(typescript@5.8.3)
       eventemitter3: 5.0.1
+    optionalDependencies:
+      typescript: 5.8.3
     transitivePeerDependencies:
       - zod
 
   resolve-pkg-maps@1.0.0: {}
+
+  surrealdb@1.3.2(tslib@2.8.1)(typescript@5.8.3)(ws@8.18.2):
+    dependencies:
+      isows: 1.0.7(ws@8.18.2)
+      tslib: 2.8.1
+      typescript: 5.8.3
+      uuidv7: 1.0.2
+    transitivePeerDependencies:
+      - ws
+
+  tslib@2.8.1: {}
 
   tsx@4.19.4:
     dependencies:
@@ -447,18 +605,24 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
+  typescript@5.8.3: {}
+
   undici-types@7.8.0: {}
 
-  viem@2.31.0:
+  uuidv7@1.0.2: {}
+
+  viem@2.31.0(typescript@5.8.3):
     dependencies:
       '@noble/curves': 1.9.1
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.0.8
+      abitype: 1.0.8(typescript@5.8.3)
       isows: 1.0.7(ws@8.18.2)
-      ox: 0.7.1
+      ox: 0.7.1(typescript@5.8.3)
       ws: 8.18.2
+    optionalDependencies:
+      typescript: 5.8.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate

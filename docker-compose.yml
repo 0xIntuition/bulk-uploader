@@ -1,0 +1,27 @@
+
+services:
+  surrealdb:
+    image: surrealdb/surrealdb:latest-dev
+    container_name: surrealdb
+    ports:
+      - "8069:8000"
+    volumes:
+      - surrealdb_data:/data
+    environment:
+      - SURREAL_CAPS_ALLOW_EXPERIMENTAL=graphql
+    command: >
+      start
+      --log info
+      --user root
+      --pass root
+      rocksdb:/data/mydatabase.db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8069/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  surrealdb_data:

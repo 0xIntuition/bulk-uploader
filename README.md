@@ -15,5 +15,9 @@ pnpm install
 ```
 
 ```
+docker compose up -d
+```
+
+```
 pnpm tsx src/upload.ts
 ```
