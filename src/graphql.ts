@@ -1,4 +1,5 @@
 import { gql, GraphQLClient } from 'graphql-request';
+import { formatDuration, formatRelative } from 'date-fns';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -13,8 +14,8 @@ const client = new GraphQLClient(apiUrl);
 
 
 const positionsCountQuery = gql`
-query PositionsCount($address: String!) {
-  positions_aggregate(where: { account_id: { _eq: $address } }) {
+query PositionsCount($where: positions_bool_exp) {
+  positions_aggregate(where: $where) {
     aggregate {
       count
     }
@@ -23,12 +24,11 @@ query PositionsCount($address: String!) {
 `;
 
 const positionsQuery = gql`
-query Positions($address: String!, $limit: Int, $offset: Int) {
+query Positions($limit: Int, $offset: Int, $where: positions_bool_exp) {
   positions(
     limit: $limit
     offset: $offset
-    where: { account_id: { _eq: $address } }
-  ) {
+    where: $where ) {
     shares
     term {
       id
@@ -63,7 +63,7 @@ query Positions($address: String!, $limit: Int, $offset: Int) {
 }
 `;
 
-interface PositionsResult {
+export interface PositionsResult {
   positions: {
     shares: number;
     term: {
@@ -98,23 +98,42 @@ interface PositionsResult {
   }[];
 }
 
-export const getPositions = async (address: string) => {
+export const syncPositions = async (callback?: (positions: PositionsResult['positions']) => void, address?: string) => {
   // loop through all pages
   let offset = 0;
-  const result: PositionsResult['positions'] = [];
   let hasMore = true;
+  const startTime = Date.now();
 
-  const { positions_aggregate } = await client.request<{ positions_aggregate: { aggregate: { count: number } } }>(positionsCountQuery, { address });
+  const { positions_aggregate } = await client.request<{ positions_aggregate: { aggregate: { count: number } } }>(positionsCountQuery, { where: address ? { account_id: { _eq: address } } : undefined });
   const totalCount = positions_aggregate.aggregate.count;
   console.log('totalCount', totalCount);
+  let processedCount = 0;
+  let loopStartTime = Date.now();
 
   while (hasMore) {
-    const { positions } = await client.request<PositionsResult>(positionsQuery, { address, limit: 100, offset });
-    result.push(...positions);
-    hasMore = totalCount > result.length;
+    console.time('getPositions');
+    const { positions } = await client.request<PositionsResult>(positionsQuery, { where: address ? { account_id: { _eq: address } } : undefined, limit: 100, offset });
+    console.timeEnd('getPositions');
+    hasMore = processedCount < totalCount;
     offset += 100;
-    console.log('progress', result.length, '/', totalCount, '(', Math.round((result.length / totalCount) * 100), '%)');
-  }
 
-  return result;
+    const loopDuration = Date.now() - loopStartTime;
+    const avgLoopTime = (Date.now() - startTime) / (processedCount / 100 || 1);
+    const remainingLoops = Math.ceil((totalCount - processedCount) / 100);
+    const estimatedEndTime = new Date(Date.now() + (avgLoopTime * remainingLoops));
+    console.log('progress', processedCount, '/', totalCount, '(', Math.round((processedCount / totalCount) * 100), '%)');
+    console.log('loop duration:', formatDuration({ seconds: Math.max(1, Math.floor(loopDuration / 1000)) }));
+    if (isNaN(estimatedEndTime.getTime())) {
+      console.log('estimated completion: calculating...');
+    } else {
+      console.log('estimated completion:', formatRelative(estimatedEndTime, new Date()));
+    }
+
+    console.time('savePositions');
+    await callback?.(positions);
+    processedCount += positions.length;
+    console.timeEnd('savePositions');
+
+    loopStartTime = Date.now();
+  }
 };

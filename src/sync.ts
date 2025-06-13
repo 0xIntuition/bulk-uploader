@@ -1,6 +1,6 @@
 import { RecordId, Surreal } from 'surrealdb';
 import { surrealdbNodeEngines } from '@surrealdb/node';
-import { getPositions } from './graphql';
+import { PositionsResult, syncPositions } from './graphql';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -45,57 +45,49 @@ const main = async () => {
   // const address = '0x19711CD19e609FEBdBF607960220898268B7E24b'; // simon
   const address = '0x88D0aF73508452c1a453356b3Fac26525aEc23A2'; // billy
 
-  console.log('syncing positions for', address);
-  console.time('getPositions');
-  const positions = await getPositions(address);
-  console.timeEnd('getPositions');
+  const sync = async (positions: PositionsResult['positions']) => {
+    for (const position of positions) {
+      if (position.term.atom) {
+        const atom = await db.upsert<Atom>(new RecordId('atom', position.term.id), {
+          term_id: position.term.atom.term_id,
+          label: position.term.atom.label,
+          type: position.term.atom.type,
+          data: position.term.atom.data,
+        });
+        // console.log(atom);
+      }
+      if (position.term.triple) {
+        // upsert subject, predicate, object
+        const subject = await db.upsert<Atom>(new RecordId('atom', position.term.triple.subject.term_id), {
+          term_id: position.term.triple.subject.term_id,
+          label: position.term.triple.subject.label,
+          type: position.term.triple.subject.type,
+          data: position.term.triple.subject.data,
+        });
+        const predicate = await db.upsert<Atom>(new RecordId('atom', position.term.triple.predicate.term_id), {
+          term_id: position.term.triple.predicate.term_id,
+          label: position.term.triple.predicate.label,
+          type: position.term.triple.predicate.type,
+          data: position.term.triple.predicate.data,
+        });
+        const object = await db.upsert<Atom>(new RecordId('atom', position.term.triple.object.term_id), {
+          term_id: position.term.triple.object.term_id,
+          label: position.term.triple.object.label,
+          type: position.term.triple.object.type,
+          data: position.term.triple.object.data,
+        });
 
-  console.log('upserting atoms');
-
-  await db.query('DEFINE TABLE atom;');
-  await db.query('DEFINE FIELD term_id ON TABLE atom;');
-  await db.query('DEFINE FIELD label ON TABLE atom;');
-  await db.query('DEFINE FIELD type ON TABLE atom;');
-  await db.query('DEFINE FIELD data ON TABLE atom;');
-
-  console.time('upsertAtoms');
-  for (const position of positions) {
-    if (position.term.atom) {
-      const atom = await db.upsert<Atom>(new RecordId('atom', position.term.id), {
-        term_id: position.term.atom.term_id,
-        label: position.term.atom.label,
-        type: position.term.atom.type,
-        data: position.term.atom.data,
-      });
-      // console.log(atom);
-    }
-    if (position.term.triple) {
-      // upsert subject, predicate, object
-      const subject = await db.upsert<Atom>(new RecordId('atom', position.term.triple.subject.term_id), {
-        term_id: position.term.triple.subject.term_id,
-        label: position.term.triple.subject.label,
-        type: position.term.triple.subject.type,
-        data: position.term.triple.subject.data,
-      });
-      const predicate = await db.upsert<Atom>(new RecordId('atom', position.term.triple.predicate.term_id), {
-        term_id: position.term.triple.predicate.term_id,
-        label: position.term.triple.predicate.label,
-        type: position.term.triple.predicate.type,
-        data: position.term.triple.predicate.data,
-      });
-      const object = await db.upsert<Atom>(new RecordId('atom', position.term.triple.object.term_id), {
-        term_id: position.term.triple.object.term_id,
-        label: position.term.triple.object.label,
-        type: position.term.triple.object.type,
-        data: position.term.triple.object.data,
-      });
-
-      await db.query(`RELATE atom:\`${position.term.triple.subject.term_id}\` -> \`${position.term.triple.predicate.label}\`:\`${position.term.id}\` -> atom:\`${position.term.triple.object.term_id}\``);
+        await db.query(`RELATE atom:\`${position.term.triple.subject.term_id}\` -> \`${position.term.triple.predicate.label}\`:\`${position.term.id}\` -> atom:\`${position.term.triple.object.term_id}\``);
+      }
     }
   }
-  console.timeEnd('upsertAtoms');
 
-  console.log('done syncing positions', positions.length);
+  console.log('syncing positions for', address);
+
+  console.time('total');
+  await syncPositions(sync);
+  // await syncPositions(sync, address);
+  console.timeEnd('total');
 
 
   // Close the database connection
