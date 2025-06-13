@@ -1,14 +1,15 @@
 
 services:
   surrealdb:
+    # image: surrealdb/surrealdb:latest
     image: surrealdb/surrealdb:latest-dev
     container_name: surrealdb
     ports:
       - "8069:8000"
     volumes:
       - surrealdb_data:/data
-    environment:
-      - SURREAL_CAPS_ALLOW_EXPERIMENTAL=graphql
+    # environment:
+      # - SURREAL_CAPS_ALLOW_EXPERIMENTAL=graphql
     command: >
       start
       --log info

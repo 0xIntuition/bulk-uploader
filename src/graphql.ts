@@ -1,5 +1,5 @@
 import { gql, GraphQLClient } from 'graphql-request';
-import { formatDuration, formatRelative } from 'date-fns';
+import { formatDuration, formatRelative, formatDistanceToNow } from 'date-fns';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -30,6 +30,7 @@ query Positions($limit: Int, $offset: Int, $where: positions_bool_exp) {
     offset: $offset
     where: $where ) {
     shares
+    account_id
     term {
       id
       atom {
@@ -66,6 +67,7 @@ query Positions($limit: Int, $offset: Int, $where: positions_bool_exp) {
 export interface PositionsResult {
   positions: {
     shares: number;
+    account_id: string;
     term: {
       id: string;
       atom?: {
@@ -98,7 +100,7 @@ export interface PositionsResult {
   }[];
 }
 
-export const syncPositions = async (callback?: (positions: PositionsResult['positions']) => void, address?: string) => {
+export const syncPositions = async (callback?: (positions: PositionsResult['positions']) => Promise<void>, address?: string) => {
   // loop through all pages
   let offset = 0;
   let hasMore = true;
@@ -126,7 +128,7 @@ export const syncPositions = async (callback?: (positions: PositionsResult['posi
     if (isNaN(estimatedEndTime.getTime())) {
       console.log('estimated completion: calculating...');
     } else {
-      console.log('estimated completion:', formatRelative(estimatedEndTime, new Date()));
+      console.log('estimated completion in', formatDistanceToNow(estimatedEndTime));
     }
 
     console.time('savePositions');
@@ -136,4 +138,19 @@ export const syncPositions = async (callback?: (positions: PositionsResult['posi
 
     loopStartTime = Date.now();
   }
+
+};
+
+
+const atomsByDataQuery = gql`
+query atomByData ($data: String!) {
+  atoms(where: {data: {_eq: $data}}) {
+    term_id
+  }
+}
+`;
+
+export const getAtomByData = async (data: string) => {
+  const { atoms } = await client.request<{ atoms: { term_id: string }[] }>(atomsByDataQuery, { data });
+  return atoms[0]?.term_id;
 };

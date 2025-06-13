@@ -2,6 +2,7 @@ import { RecordId, Surreal } from 'surrealdb';
 import { surrealdbNodeEngines } from '@surrealdb/node';
 import { PositionsResult, syncPositions } from './graphql';
 import dotenv from 'dotenv';
+import { getAddress } from 'viem';
 
 dotenv.config();
 
@@ -42,8 +43,8 @@ const main = async () => {
     data: string;
   };
 
-  // const address = '0x19711CD19e609FEBdBF607960220898268B7E24b'; // simon
-  const address = '0x88D0aF73508452c1a453356b3Fac26525aEc23A2'; // billy
+  const address = '0x19711CD19e609FEBdBF607960220898268B7E24b'; // simon
+  //const address = '0x88D0aF73508452c1a453356b3Fac26525aEc23A2'; // billy
 
   const sync = async (positions: PositionsResult['positions']) => {
     for (const position of positions) {
@@ -77,7 +78,20 @@ const main = async () => {
           data: position.term.triple.object.data,
         });
 
-        await db.query(`RELATE atom:\`${position.term.triple.subject.term_id}\` -> \`${position.term.triple.predicate.label}\`:\`${position.term.id}\` -> atom:\`${position.term.triple.object.term_id}\``);
+        // Check if the relation already exists
+        const relation: any = await db.query(`SELECT * FROM \`${position.term.triple.predicate.label}\` WHERE id = \`${position.term.triple.predicate.label}\`:\`${position.term.id}\``);
+        if (relation[0].length > 0) {
+          // update the relation
+          await db.query(`UPDATE \`${position.term.triple.predicate.label}\`:\`${position.term.id}\` SET holders += '${position.account_id}'`);
+        } else {
+          // create the relation
+          await db.query(`RELATE atom:\`${position.term.triple.subject.term_id}\` -> \`${position.term.triple.predicate.label}\`:\`${position.term.id}\` -> atom:\`${position.term.triple.object.term_id}\`
+          CONTENT {
+            holders: ['${position.account_id}'],
+          }`);
+        }
+
+
       }
     }
   }
@@ -85,8 +99,21 @@ const main = async () => {
   console.log('syncing positions for', address);
 
   console.time('total');
-  await syncPositions(sync);
   // await syncPositions(sync, address);
+  await syncPositions(sync);
+
+  // get follwing
+  // const following: any = await db.query(`SELECT ->atom.* as following from \`follow\` where in = atom:\`11\` and holders contains '${address}'`);
+  // const res = following[0]
+  // for (const item of res) {
+  //   console.log('following', item.following);
+  //   const followingAddress = getAddress(item.following[0].data);
+  //   console.log('syncing positions for', followingAddress);
+  //   await syncPositions(sync, followingAddress);
+  // }
+
+
+
   console.timeEnd('total');
 
 
